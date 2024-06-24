@@ -32,11 +32,22 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(32),
-        child: Text("content"),
-      ),
+    return Scaffold(
+      body: Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(onPressed: () {}, child: const Text("botão")),
+          const SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(onPressed: () {}, child: const Text("botão")),
+          const SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(onPressed: () {}, child: const Text("botão")),
+        ],
+      )),
       backgroundColor: Colors.amber,
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rpg_geo/main.dart';
 
 class LoadGamePage extends StatefulWidget {
   const LoadGamePage({super.key});
@@ -10,9 +11,23 @@ class LoadGamePage extends StatefulWidget {
 class _LoadGamePageState extends State<LoadGamePage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Center(
-      child: Text("LoadGame"),
-    ));
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.grey[200],
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(),
+                ));
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
+        body: Center(
+          child: Text("LoadGame"),
+        ));
   }
 }

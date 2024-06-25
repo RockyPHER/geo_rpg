@@ -1,11 +1,8 @@
-import 'dart:io' show Platform;
-
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:rpg_geo/screen/loadGamePage.dart';
 import 'package:rpg_geo/screen/newGamePage.dart';
 import 'package:rpg_geo/screen/settingsPage.dart';
-import 'package:window_size/window_size.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() {
   setupWindow();
@@ -16,15 +13,24 @@ void main() {
   );
 }
 
-const double windowWidth = 1024;
-const double windowHeight = 800;
+const double windowWidth = 360;
+const double windowHeight = 600;
 
-void setupWindow() {
-  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    WidgetsFlutterBinding.ensureInitialized();
-    setWindowTitle('RPG GEO');
-    setWindowMinSize(const Size(windowWidth, windowHeight));
-  }
+void setupWindow() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(360, 600),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.normal,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 }
 
 class HomePage extends StatelessWidget {
@@ -33,37 +39,41 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData.dark(),
-        home: DefaultTabController(
-            length: 3,
-            child: Scaffold(
-                appBar: AppBar(
-                  bottom: const TabBar(
-                    tabs: [
-                      Tab(
-                        icon: Icon(Icons.play_arrow),
-                        text: "New Game",
-                      ),
-                      Tab(
-                        icon: Icon(Icons.save),
-                        text: "Load Game",
-                      ),
-                      Tab(
-                        icon: Icon(Icons.settings),
-                        text: "Settings",
-                      )
-                    ],
-                  ),
-                  title: Center(
-                    child: Text("RPG GEO"),
-                  ),
-                ),
-                body: const TabBarView(
-                  children: [
-                    NewGamePage(),
-                    LoadGamePage(),
-                    SettingsPage(),
-                  ],
-                ))));
+      theme: ThemeData.dark(),
+      home: Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NewGamePage()));
+                },
+                child: Icon(Icons.play_arrow)),
+            SizedBox(
+              width: 16,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoadGamePage()));
+              },
+              child: Icon(Icons.save),
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()));
+              },
+              child: Icon(Icons.settings),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

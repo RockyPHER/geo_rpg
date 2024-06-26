@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:rpg_geo/screen/loadGamePage.dart';
+import 'package:provider/provider.dart';
 import 'package:rpg_geo/screen/newGamePage.dart';
 import 'package:rpg_geo/screen/settingsPage.dart';
+import 'package:rpg_geo/model/gameFlow.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() {
   setupWindow();
   runApp(
-    const MaterialApp(
-      home: HomePage(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Gameflow()),
+      ],
+      child: const MyApp(),
     ),
   );
 }
@@ -33,45 +37,51 @@ void setupWindow() async {
   });
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: Align(
-        alignment: Alignment.center,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NewGamePage()));
-                },
-                child: Icon(Icons.play_arrow)),
-            SizedBox(
-              width: 16,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoadGamePage()));
-              },
-              child: Icon(Icons.save),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()));
-              },
-              child: Icon(Icons.settings),
-            ),
-          ],
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton.icon(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => NewGamePage()));
+          },
+          icon: Icon(Icons.play_arrow),
+          label: SizedBox.shrink(),
+          style: ElevatedButton.styleFrom(
+              shape: CircleBorder(),
+              padding: EdgeInsets.all(10),
+              alignment: Alignment.center,
+              fixedSize: Size(64, 64)),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[200],
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsPage(),
+              ));
+        },
+        child: Icon(
+          Icons.settings,
+          color: Colors.black,
         ),
       ),
     );
